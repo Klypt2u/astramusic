@@ -1,0 +1,69 @@
+name: Build iOS (.ipa)
+
+# Builds an UNSIGNED .ipa with a Flutter release build inside a macOS runner.
+# Sign it afterwards on your PC with AltStore or Sideloadly using a free
+# Apple ID — full instructions in docs/BUILD_IPA_GUIDE.md.
+#
+# Trigger: Actions tab → Run workflow (manual), or push a v* tag.
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-ios:
+    name: Flutter → unsigned .ipa
+    runs-on: macos-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java (required by some Flutter plugins' tooling)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Generate platform folders
+        # The repository intentionally does not commit ios/ or android/
+        # (they are regenerated per machine). The org/bundle id must match
+        # what you will use in AltStore/Sideloadly later.
+        run: flutter create --org com.astra --project-name astra .
+
+      - name: Enable background audio in Info.plist
+        run: |
+          /usr/libexec/PlistBuddy -c "Add :UIBackgroundModes array" ios/Runner/Info.plist 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Add :UIBackgroundModes:0 string audio" ios/Runner/Info.plist 2>/dev/null || true
+          /usr/libexec/PlistBuddy -c "Print :UIBackgroundModes" ios/Runner/Info.plist
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Analyze (fail the build on analyzer errors)
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: Build release .app without code signing
+        run: flutter build ios --release --no-codesign
+
+      - name: Package .ipa (unsigned Payload)
+        run: |
+          mkdir Payload
+          cp -r build/ios/iphoneos/Runner.app Payload/Runner.app
+          zip -qry Astra.ipa Payload
+          ls -lh Astra.ipa
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Astra-unsigned-ipa
+          path: Astra.ipa
+          retention-days: 30

@@ -1,0 +1,58 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Generated platform folders are created per-machine with `flutter create .`
+# (see README + docs/BUILD_IPA_GUIDE.md — the iOS / Android project shells are
+# intentionally not committed so the repo stays writable from Windows/Linux).
+/android/
+/ios/
+/linux/
+/macos/
+/windows/
+/web/
+
+# Build artifacts
+*.ipa
+*.xcarchive
+Payload/
+app-release.apk
+
+# Coverage
+coverage/

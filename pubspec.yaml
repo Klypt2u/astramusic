@@ -1,0 +1,43 @@
+name: astra
+description: "Astra — a minimalist, ad-free YouTube Music streaming client for iOS, built with Flutter."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # --- State management -------------------------------------------------------
+  provider: ^6.1.2
+
+  # --- Networking -------------------------------------------------------------
+  http: ^1.2.2
+
+  # --- Audio playback + background audio --------------------------------------
+  just_audio: ^0.10.0
+  audio_service: ^0.19.1
+  audio_session: ^0.2.0
+
+  # --- Local data (playlists, favorites) ---------------------------------------
+  shared_preferences: ^2.3.2
+
+  # --- UI ---------------------------------------------------------------------
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  palette_generator: ^0.3.3+4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Enable the Roboto/san-serif defaults; add custom fonts under fonts: if desired.
+  fonts: []
